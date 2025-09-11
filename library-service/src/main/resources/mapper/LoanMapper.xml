@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.library.service.repository.LoanMapper">
+
+    <resultMap id="LoanBookMap" type="com.example.library.core.dto.LoanBookDTO">
+        <id     column="loan_id"     property="loanId"/>
+        <result column="book_id"     property="bookId"/>
+        <result column="inventory_id" property="inventoryId"/>
+        <result column="title"       property="title"/>
+        <result column="author"      property="author"/>
+        <result column="cover_url"   property="coverUrl"/>
+        <result column="loan_date"   property="loanDate"/>
+        <result column="return_date" property="returnDate"/>
+    </resultMap>
+
+    <select id="pickAvailableInventory" parameterType="int" resultType="int">
+        SELECT id
+        FROM book_inventory
+        WHERE book_id = #{bookId}
+        AND is_deleted = 0
+        AND status = 'AVAILABLE'
+        ORDER BY id ASC
+        LIMIT 1
+    </select>
+
+    <update id="markInventoryBorrowed">
+        UPDATE book_inventory
+        SET status = 'BORROWED',
+        updated_by = #{updatedBy}
+        WHERE id = #{inventoryId}
+        AND status = 'AVAILABLE'
+        AND is_deleted = 0
+    </update>
+
+    <insert id="insertBookLoan"
+            parameterType="com.example.library.core.dto.LoanBookDTO"
+            useGeneratedKeys="true"
+            keyProperty="loanId">
+        INSERT INTO book_loans (user_id, book_inventory_id, loan_date, created_by)
+        VALUES (#{userId}, #{inventoryId}, #{loanDate}, #{createdBy})
+    </insert>
+
+    <update id="markBookLoanReturned">
+        UPDATE book_loans
+        SET return_date = #{returnDate},
+        updated_by = #{updatedBy}
+        WHERE id = #{loanId}
+        AND return_date IS NULL
+        AND is_deleted = 0
+    </update>
+
+    <update id="markInventoryAvailable">
+        UPDATE book_inventory
+        SET status = 'AVAILABLE',
+        updated_by = #{updatedBy}
+        WHERE id = #{inventoryId}
+        AND status = 'BORROWED'
+        AND is_deleted = 0
+    </update>
+
+    <select id="findLoanBookInventoryId" resultType="int">
+        SELECT bi.id
+        FROM book_loans bl
+        JOIN book_inventory bi ON bi.id = bl.book_inventory_id
+        WHERE bl.id = #{loanId}
+        AND bl.user_id = #{userId}
+        AND bl.return_date IS NULL
+        AND bl.is_deleted = 0
+        AND bi.is_deleted = 0
+        LIMIT 1
+    </select>
+
+    <select id="findMyLoanBooks" resultMap="LoanBookMap">
+        SELECT
+        bl.id            AS loan_id,
+        bi.book_id       AS book_id,
+        bi.id            AS inventory_id,
+        b.title          AS title,
+        b.author         AS author,
+        b.cover_url      AS cover_url,
+        bl.loan_date     AS loan_date,
+        bl.return_date   AS return_date
+        FROM book_loans bl
+        JOIN book_inventory bi ON bi.id = bl.book_inventory_id
+        JOIN books b ON b.id = bi.book_id
+        WHERE bl.user_id = #{userId}
+        AND bl.is_deleted = 0
+        AND bi.is_deleted = 0
+        AND b.is_deleted  = 0
+        ORDER BY
+        CASE WHEN bl.return_date IS NULL THEN 0 ELSE 1 END ASC,
+        bl.loan_date DESC
+    </select>
+</mapper>
