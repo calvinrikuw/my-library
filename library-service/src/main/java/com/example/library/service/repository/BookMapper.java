@@ -1,6 +1,6 @@
 package com.example.library.service.repository;
 
-import com.example.library.core.domain.Book;
+import com.example.library.core.dto.FindBookDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -13,6 +13,6 @@ public interface BookMapper {
      * 支持书名/作者的模糊匹配查询
      *
      */
-    List<Book> find(@Param("keywords") List<String> keywords,
-                    @Param("limit") int limit);
+    List<FindBookDto> find(@Param("keywords") List<String> keywords,
+                           @Param("limit") int limit);
 }

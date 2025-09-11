@@ -13,5 +13,8 @@ public class Book {
     private String categories;
     private String summary;
     private String coverUrl;
-    private Boolean isDeleted;
+    private LocalDateTime createdTime;
+    private String updatedBy;
+    private LocalDateTime updatedTime;
+    private Integer isDeleted;
 }

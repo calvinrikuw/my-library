@@ -1,9 +1,8 @@
 package com.example.library.app.controller;
 
-import com.example.library.app.dto.LoginResponse;
 import com.example.library.app.dto.ResponseResult;
 import com.example.library.app.handler.ResponseResults;
-import com.example.library.core.domain.Book;
+import com.example.library.core.dto.FindBookDto;
 import com.example.library.service.service.BookService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +20,7 @@ public class BookController {
     }
 
     @GetMapping
-    public ResponseEntity<ResponseResult<List<Book>>> list(@RequestParam(value = "q", required = false) String query) {
+    public ResponseEntity<ResponseResult<List<FindBookDto>>> list(@RequestParam(value = "q", required = false) String query) {
         return ResponseEntity.ok(ResponseResults.ok(bookService.search(query, 50)));
     }
 }

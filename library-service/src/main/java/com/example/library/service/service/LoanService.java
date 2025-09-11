@@ -1,6 +1,6 @@
 package com.example.library.service.service;
 
-import com.example.library.core.dto.LoanBookDTO;
+import com.example.library.core.dto.LoanBookDto;
 import com.example.library.core.exception.BusinessException;
 import com.example.library.service.repository.LoanMapper;
 import org.springframework.stereotype.Service;
@@ -34,7 +34,7 @@ public class LoanService {
             throw new BusinessException("CONCURRENT_BORROW", "该图书已被他人借走");
         }
 
-        LoanBookDTO loanBook = new LoanBookDTO(0, userId, bookInventoryId, LocalDate.now(), userName);
+        LoanBookDto loanBook = new LoanBookDto(0, userId, bookInventoryId, LocalDate.now(), userName);
         loanMapper.insertBookLoan(loanBook);
     }
 
@@ -57,7 +57,7 @@ public class LoanService {
         loanMapper.markInventoryAvailable(inventoryId, userName);
     }
 
-    public List<LoanBookDTO> findMyLoanBooks(Integer userId) {
+    public List<LoanBookDto> findMyLoanBooks(Integer userId) {
         if (userId == null) {
             throw new BusinessException("INVALID_ARGUMENT", "用户ID不能为空");
         }

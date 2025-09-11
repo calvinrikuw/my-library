@@ -1,6 +1,6 @@
 package com.example.library.service.service;
 
-import com.example.library.core.domain.Book;
+import com.example.library.core.dto.FindBookDto;
 import com.example.library.service.repository.BookMapper;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +16,7 @@ public class BookService {
         this.bookMapper = bookMapper;
     }
 
-    public List<Book> search(String query, Integer limit) {
+    public List<FindBookDto> search(String query, int limit) {
         List<String> keywords = null;
         if (query != null && !query.isBlank()) {
             // 按空白字符进行分割出关键字

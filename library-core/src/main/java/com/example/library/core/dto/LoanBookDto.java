@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 @AllArgsConstructor
 @Data
-public class LoanBookDTO {
+public class LoanBookDto {
     private int loanId;
     private int bookId;
     private int inventoryId;
@@ -19,7 +19,7 @@ public class LoanBookDTO {
     private int userId;
     private String createdBy;
 
-    public LoanBookDTO(int loanId, int userId, int inventoryId, LocalDate loanDate, String createdBy) {
+    public LoanBookDto(int loanId, int userId, int inventoryId, LocalDate loanDate, String createdBy) {
         this.loanId = loanId;
         this.userId = userId;
         this.inventoryId = inventoryId;
@@ -27,7 +27,7 @@ public class LoanBookDTO {
         this.createdBy = createdBy;
     }
 
-    public LoanBookDTO(int loanId, int bookId, int inventoryId, String title, String author, String coverUrl, LocalDate loanDate, LocalDate returnDate) {
+    public LoanBookDto(int loanId, int bookId, int inventoryId, String title, String author, String coverUrl, LocalDate loanDate, LocalDate returnDate) {
         this.loanId = loanId;
         this.bookId = bookId;
         this.inventoryId = inventoryId;

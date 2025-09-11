@@ -1,6 +1,6 @@
 package com.example.library.service.repository;
 
-import com.example.library.core.dto.LoanBookDTO;
+import com.example.library.core.dto.LoanBookDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -27,7 +27,7 @@ public interface LoanMapper {
      * 记录图书借阅信息和借阅日期
      *
      */
-    int insertBookLoan(LoanBookDTO loan);
+    int insertBookLoan(LoanBookDto loan);
 
     /**
      * 记录借阅图书的归还日期
@@ -55,5 +55,5 @@ public interface LoanMapper {
      * 查找当前用户的借阅历史
      *
      */
-    List<LoanBookDTO> findMyLoanBooks(@Param("userId") int userId);
+    List<LoanBookDto> findMyLoanBooks(@Param("userId") int userId);
 }

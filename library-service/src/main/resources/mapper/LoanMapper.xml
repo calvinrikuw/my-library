@@ -5,7 +5,7 @@
 
 <mapper namespace="com.example.library.service.repository.LoanMapper">
 
-    <resultMap id="LoanBookMap" type="com.example.library.core.dto.LoanBookDTO">
+    <resultMap id="LoanBookMap" type="com.example.library.core.dto.LoanBookDto">
         <id     column="loan_id"     property="loanId"/>
         <result column="book_id"     property="bookId"/>
         <result column="inventory_id" property="inventoryId"/>
@@ -36,7 +36,7 @@
     </update>
 
     <insert id="insertBookLoan"
-            parameterType="com.example.library.core.dto.LoanBookDTO"
+            parameterType="com.example.library.core.dto.LoanBookDto"
             useGeneratedKeys="true"
             keyProperty="loanId">
         INSERT INTO book_loans (user_id, book_inventory_id, loan_date, created_by)
@@ -93,5 +93,6 @@
         ORDER BY
         CASE WHEN bl.return_date IS NULL THEN 0 ELSE 1 END ASC,
         bl.loan_date DESC
+        LIMIT 20
     </select>
 </mapper>

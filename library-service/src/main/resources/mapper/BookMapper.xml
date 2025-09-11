@@ -5,7 +5,7 @@
 
 <mapper namespace="com.example.library.service.repository.BookMapper">
 
-    <resultMap id="BookResult" type="com.example.library.core.domain.Book">
+    <resultMap id="BookResult" type="com.example.library.core.dto.FindBookDto">
         <id     column="id"         property="id"/>
         <result column="title"      property="title"/>
         <result column="author"     property="author"/>
@@ -13,12 +13,11 @@
         <result column="categories" property="categories"/>
         <result column="summary"    property="summary"/>
         <result column="cover_url"  property="coverUrl"/>
-        <result column="is_deleted" property="isDeleted"/>
     </resultMap>
 
     <select id="find" resultMap="BookResult">
         SELECT
-        id, title, author, isbn, categories, summary, cover_url, is_deleted
+        id, title, author, isbn, categories, summary, cover_url
         FROM books
         <where>
             is_deleted = 0

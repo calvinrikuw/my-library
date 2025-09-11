@@ -1,10 +1,9 @@
 package com.example.library.app.controller;
 
-import com.example.library.app.dto.LoginResponse;
 import com.example.library.app.dto.ResponseResult;
 import com.example.library.app.handler.ResponseResults;
 import com.example.library.app.security.SecurityUtils;
-import com.example.library.core.dto.LoanBookDTO;
+import com.example.library.core.dto.LoanBookDto;
 import com.example.library.service.service.LoanService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,7 +38,7 @@ public class LoanController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<ResponseResult<List<LoanBookDTO>>> myLoanBooks() {
+    public ResponseEntity<ResponseResult<List<LoanBookDto>>> myLoanBooks() {
         Integer uid = SecurityUtils.getCurrentUid();
         return ResponseEntity.ok(ResponseResults.ok(loanService.findMyLoanBooks(uid)));
     }

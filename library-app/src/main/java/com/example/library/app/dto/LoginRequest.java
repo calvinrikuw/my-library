@@ -4,10 +4,10 @@ import jakarta.validation.constraints.NotBlank;
 
 public class LoginRequest {
 
-    @NotBlank
+    @NotBlank(message = "account Or email is required")
     private String accountOrEmail;
 
-    @NotBlank
+    @NotBlank(message = "password is required")
     private String password;
 
     public LoginRequest() {
