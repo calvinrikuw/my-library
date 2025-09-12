@@ -12,11 +12,19 @@ import java.util.List;
 public interface BookMapper {
 
     /**
+     * 分页查询
+     * 模糊匹配查询书籍数量
+     *
+     */
+    long countByKeywords(@Param("keywords") List<String> keywords);
+    /**
+     * 分页查询
      * 支持书名/作者的模糊匹配查询
      *
      */
     List<FindBookDto> find(@Param("keywords") List<String> keywords,
-                           @Param("limit") int limit);
+                           @Param("limit") int limit,
+                           @Param("offset") int offset);
 
     /**
      * 根据 ISBN 查找书籍

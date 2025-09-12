@@ -26,6 +26,23 @@
         <result property="availableCopies" column="available_copies"/>
     </resultMap>
 
+    <!-- 计数 -->
+    <select id="countByKeywords" resultType="long">
+        SELECT COUNT(*)
+        FROM books
+        <where>
+            is_deleted = 0
+            <if test="keywords != null and keywords.size() > 0">
+                <foreach collection="keywords" item="kw">
+                    AND (
+                    title LIKE CONCAT('%', #{kw}, '%')
+                    OR author LIKE CONCAT('%', #{kw}, '%')
+                    )
+                </foreach>
+            </if>
+        </where>
+    </select>
+
     <select id="find" resultMap="BookResult">
         SELECT
         id, title, author, isbn, categories, summary, cover_url
@@ -42,9 +59,7 @@
             </if>
         </where>
         ORDER BY id DESC
-        <if test="limit != null and limit &gt; 0">
-            LIMIT #{limit}
-        </if>
+        LIMIT #{limit} OFFSET #{offset}
     </select>
 
     <select id="getIdByIsbn" resultType="int">

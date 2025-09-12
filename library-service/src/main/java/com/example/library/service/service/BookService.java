@@ -2,12 +2,14 @@ package com.example.library.service.service;
 
 import com.example.library.core.dto.BookDetailDto;
 import com.example.library.core.dto.FindBookDto;
+import com.example.library.core.dto.PageResult;
 import com.example.library.core.exception.BusinessException;
 import com.example.library.service.repository.BookMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -19,7 +21,11 @@ public class BookService {
         this.bookMapper = bookMapper;
     }
 
-    public List<FindBookDto> search(String query, int limit) {
+    public PageResult<FindBookDto> search(String query, int page, int size) {
+        int pageNum = page <= 0 ? 1 : page;
+        int limit = size <= 0 ? 10 : Math.min(size, 20);
+        int offset = (pageNum - 1) * limit;
+
         List<String> keywords = null;
         if (query != null && !query.isBlank()) {
             // 按空白字符进行分割出关键字
@@ -27,7 +33,15 @@ public class BookService {
                     .filter(s -> !s.isBlank())
                     .toList();
         }
-        return bookMapper.find(keywords, limit);
+        long total = bookMapper.countByKeywords(keywords);
+
+        List<FindBookDto> rows;
+        if (total == 0) {
+            rows = Collections.emptyList();
+        } else {
+            rows = bookMapper.find(keywords, limit, offset);
+        }
+        return new PageResult<>(total, pageNum, limit, rows);
     }
 
     @Transactional(readOnly = true)

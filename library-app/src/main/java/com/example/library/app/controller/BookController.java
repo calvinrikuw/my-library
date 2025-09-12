@@ -6,6 +6,7 @@ import com.example.library.app.handler.ResponseResults;
 import com.example.library.app.security.SecurityUtils;
 import com.example.library.core.dto.BookDetailDto;
 import com.example.library.core.dto.FindBookDto;
+import com.example.library.core.dto.PageResult;
 import com.example.library.core.dto.UploadBookResult;
 import com.example.library.service.service.BookService;
 import com.example.library.service.service.BookUploadService;
@@ -31,8 +32,10 @@ public class BookController {
     }
 
     @GetMapping
-    public ResponseEntity<ResponseResult<List<FindBookDto>>> list(@RequestParam(value = "q", required = false) String query) {
-        return ResponseEntity.ok(ResponseResults.ok(bookService.search(query, 50)));
+    public ResponseEntity<ResponseResult<PageResult<FindBookDto>>> list(@RequestParam(value = "q", required = false) String query,
+                                                                        @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                                                        @RequestParam(value = "size", required = false, defaultValue = "20") int size) {
+        return ResponseEntity.ok(ResponseResults.ok(bookService.search(query, page, size)));
     }
 
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
