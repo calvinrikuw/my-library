@@ -1,8 +1,11 @@
 package com.example.library.service.service;
 
+import com.example.library.core.dto.BookDetailDto;
 import com.example.library.core.dto.FindBookDto;
+import com.example.library.core.exception.BusinessException;
 import com.example.library.service.repository.BookMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
@@ -25,5 +28,14 @@ public class BookService {
                     .toList();
         }
         return bookMapper.find(keywords, limit);
+    }
+
+    @Transactional(readOnly = true)
+    public BookDetailDto getBookDetail(int bookId) {
+        BookDetailDto dto = bookMapper.getBookDetail(bookId);
+        if (dto == null) {
+            throw new BusinessException("BOOK_NOT_FOUND", "该书籍不存在");
+        }
+        return dto;
     }
 }

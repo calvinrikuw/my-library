@@ -1,5 +1,6 @@
 package com.example.library.service.repository;
 
+import com.example.library.core.dto.BookDetailDto;
 import com.example.library.core.dto.FindBookDto;
 import com.example.library.core.dto.UploadBookDto;
 import org.apache.ibatis.annotations.Mapper;
@@ -36,4 +37,10 @@ public interface BookMapper {
     int insertInventory(@Param("bookId") int bookId,
                         @Param("ownerUserId") Integer ownerUserId,
                         @Param("createdBy") String createdBy);
+
+    /**
+     * 查询书籍详情及有效库存
+     *
+     */
+    BookDetailDto getBookDetail(@Param("id") int id);
 }

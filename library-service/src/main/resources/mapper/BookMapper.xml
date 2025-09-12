@@ -15,6 +15,17 @@
         <result column="cover_url"  property="coverUrl"/>
     </resultMap>
 
+    <resultMap id="BookDetailMap" type="com.example.library.core.dto.BookDetailDto">
+        <id     property="id"             column="id"/>
+        <result property="title"          column="title"/>
+        <result property="author"         column="author"/>
+        <result property="isbn"           column="isbn"/>
+        <result property="categories"     column="categories"/>
+        <result property="summary"        column="summary"/>
+        <result property="coverUrl"       column="cover_url"/>
+        <result property="availableCopies" column="available_copies"/>
+    </resultMap>
+
     <select id="find" resultMap="BookResult">
         SELECT
         id, title, author, isbn, categories, summary, cover_url
@@ -49,4 +60,20 @@
         INSERT INTO book_inventory (book_id, owner_user_id, status, created_by)
         VALUES (#{bookId}, #{ownerUserId}, 'AVAILABLE', #{createdBy})
     </insert>
+
+    <select id="getBookDetail" resultMap="BookDetailMap">
+        SELECT b.id,
+        b.title,
+        b.author,
+        b.isbn,
+        b.categories,
+        b.summary,
+        b.cover_url,
+        COALESCE(SUM(CASE WHEN i.status = 'AVAILABLE' THEN 1 ELSE 0 END), 0) AS available_copies
+        FROM books b
+        LEFT JOIN book_inventory i ON b.id = i.book_id
+        WHERE b.is_deleted = 0 AND b.id = #{id}
+        GROUP BY b.id, b.title, b.author, b.isbn, b.categories, b.summary, b.cover_url
+        LIMIT 1
+    </select>
 </mapper>

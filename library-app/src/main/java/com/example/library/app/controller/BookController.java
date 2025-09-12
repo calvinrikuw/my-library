@@ -4,6 +4,7 @@ import com.example.library.app.dto.ResponseResult;
 import com.example.library.app.dto.UploadBookRequest;
 import com.example.library.app.handler.ResponseResults;
 import com.example.library.app.security.SecurityUtils;
+import com.example.library.core.dto.BookDetailDto;
 import com.example.library.core.dto.FindBookDto;
 import com.example.library.core.dto.UploadBookResult;
 import com.example.library.service.service.BookService;
@@ -52,4 +53,11 @@ public class BookController {
         return ResponseEntity.ok(ResponseResults.ok("图书上架成功", res));
 
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseResult<BookDetailDto>> detail(@PathVariable("id") Integer id) {
+        BookDetailDto dto = bookService.getBookDetail(id);
+        return ResponseEntity.ok(ResponseResults.ok(dto));
+    }
+
 }
