@@ -2,8 +2,6 @@ package com.example.library.core.dto;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 @Data
 public class FindBookDto {
     private Integer id;

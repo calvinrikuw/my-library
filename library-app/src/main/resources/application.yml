@@ -11,7 +11,10 @@ spring:
   jackson:
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false
-
+  servlet:
+    multipart:
+      max-file-size: 200KB
+      max-request-size: 500KB
 jwt:
   secret: "1cX3z/efp5I2kT7n0i1RDo9W6QkqZXhP3p8JmN2S4hY9ZsVxUf7WqQa=="
   issuer: "my-library"
@@ -21,6 +24,13 @@ mybatis:
   mapper-locations: classpath*:mapper/**/*.xml
   configuration:
     map-underscore-to-camel-case: true
+
+app:
+  upload:
+    # 本地保存根目录
+    root: uploads
+    # 对外可访问前缀
+    public-prefix: /static
 
 #logging:
 #  level:

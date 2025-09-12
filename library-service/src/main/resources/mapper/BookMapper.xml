@@ -36,4 +36,17 @@
         </if>
     </select>
 
+    <select id="getIdByIsbn" resultType="int">
+        SELECT id FROM books WHERE is_deleted = 0 AND isbn = #{isbn} LIMIT 1
+    </select>
+
+    <insert id="insertBook" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO books (title, author, isbn, categories, summary, cover_url, created_by)
+        VALUES (#{title}, #{author}, #{isbn}, #{categories}, #{summary}, #{coverUrl}, #{createdBy})
+    </insert>
+
+    <insert id="insertInventory">
+        INSERT INTO book_inventory (book_id, owner_user_id, status, created_by)
+        VALUES (#{bookId}, #{ownerUserId}, 'AVAILABLE', #{createdBy})
+    </insert>
 </mapper>
