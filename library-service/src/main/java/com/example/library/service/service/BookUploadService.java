@@ -21,8 +21,8 @@ public class BookUploadService {
     }
 
     @Transactional
-    public UploadBookResult upload(String title, String author, String isbn,
-                                   String categories, String summary,
+    public UploadBookResult upload(String title, String author, String publisher,
+                                   String isbn, String categories, String summary,
                                    CoverData cover, Integer userId, String userName) {
         if (isbn == null || isbn.isBlank()) {
             throw new BusinessException("ISBN_NOT_FOUND", "书籍的ISBN为空");
@@ -46,6 +46,7 @@ public class BookUploadService {
         UploadBookDto book = new UploadBookDto();
         book.setTitle(title);
         book.setAuthor(author);
+        book.setPublisher(publisher);
         book.setIsbn(isbn);
         book.setCategories(categories);
         book.setSummary(summary);

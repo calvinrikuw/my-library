@@ -51,7 +51,7 @@ public class BookController {
             cover = new CoverData(req.getCover().getBytes(), req.getCover().getOriginalFilename());
         }
 
-        UploadBookResult res = bookUploadService.upload(req.getTitle(), req.getAuthor(),
+        UploadBookResult res = bookUploadService.upload(req.getTitle(), req.getAuthor(), req.getPublisher(),
                 req.getIsbn(), req.getCategories(), req.getSummary(), cover, uid, name);
 
         return ResponseEntity.ok(ResponseResults.ok("图书上架成功", res));

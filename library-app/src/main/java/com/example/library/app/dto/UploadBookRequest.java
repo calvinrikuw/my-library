@@ -13,6 +13,9 @@ public class UploadBookRequest {
     @NotBlank(message = "author is required")
     private String author;
 
+    @NotBlank(message = "publisher is required")
+    private String publisher;
+
     @Size(max = 20, message = "ISBN length is 20")
     private String isbn;
 
@@ -28,36 +31,14 @@ public class UploadBookRequest {
     public UploadBookRequest() {
     }
 
-    public UploadBookRequest(String title, String author, String isbn, String categories, String summary, MultipartFile cover) {
+    public UploadBookRequest(String title, String author, String publisher, String isbn,
+                             String categories, String summary, MultipartFile cover) {
         this.title = title;
         this.author = author;
+        this.publisher = publisher;
         this.isbn = isbn;
         this.categories = categories;
         this.summary = summary;
-        this.cover = cover;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public void setIsbn(String isbn) {
-        this.isbn = isbn;
-    }
-
-    public void setCategories(String categories) {
-        this.categories = categories;
-    }
-
-    public void setSummary(String summary) {
-        this.summary = summary;
-    }
-
-    public void setCover(MultipartFile cover) {
         this.cover = cover;
     }
 
@@ -65,23 +46,55 @@ public class UploadBookRequest {
         return title;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getAuthor() {
         return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getPublisher() {
+        return publisher;
+    }
+
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
     }
 
     public String getIsbn() {
         return isbn;
     }
 
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
+
     public String getCategories() {
         return categories;
+    }
+
+    public void setCategories(String categories) {
+        this.categories = categories;
     }
 
     public String getSummary() {
         return summary;
     }
 
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
+
     public MultipartFile getCover() {
         return cover;
+    }
+
+    public void setCover(MultipartFile cover) {
+        this.cover = cover;
     }
 }
