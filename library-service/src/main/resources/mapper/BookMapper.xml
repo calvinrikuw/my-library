@@ -32,6 +32,9 @@
         FROM books
         <where>
             is_deleted = 0
+            <if test="category != null">
+                AND categories = #{category}
+            </if>
             <if test="keywords != null and keywords.size() > 0">
                 <foreach collection="keywords" item="kw">
                     AND (
@@ -49,6 +52,9 @@
         FROM books
         <where>
             is_deleted = 0
+            <if test="category != null">
+                AND categories = #{category}
+            </if>
             <if test="keywords != null and keywords.size() > 0">
                 <foreach collection="keywords" item="kw">
                     AND (

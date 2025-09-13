@@ -16,13 +16,15 @@ public interface BookMapper {
      * 模糊匹配查询书籍数量
      *
      */
-    long countByKeywords(@Param("keywords") List<String> keywords);
+    long countByKeywords(@Param("category") String category,
+                         @Param("keywords") List<String> keywords);
     /**
      * 分页查询
      * 支持书名/作者的模糊匹配查询
      *
      */
-    List<FindBookDto> find(@Param("keywords") List<String> keywords,
+    List<FindBookDto> find(@Param("category") String category,
+                           @Param("keywords") List<String> keywords,
                            @Param("limit") int limit,
                            @Param("offset") int offset);
 

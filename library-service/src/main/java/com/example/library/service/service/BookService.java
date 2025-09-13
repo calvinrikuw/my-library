@@ -21,7 +21,9 @@ public class BookService {
         this.bookMapper = bookMapper;
     }
 
-    public PageResult<FindBookDto> search(String query, int page, int size) {
+    public PageResult<FindBookDto> search(String category, String query, int page, int size) {
+        // 是否按分类筛选
+        boolean filterCategory = (category != null && !"all".equalsIgnoreCase(category));
         int pageNum = page <= 0 ? 1 : page;
         int limit = size <= 0 ? 10 : Math.min(size, 20);
         int offset = (pageNum - 1) * limit;
@@ -33,13 +35,13 @@ public class BookService {
                     .filter(s -> !s.isBlank())
                     .toList();
         }
-        long total = bookMapper.countByKeywords(keywords);
+        long total = bookMapper.countByKeywords(filterCategory ? category : null, keywords);
 
         List<FindBookDto> rows;
         if (total == 0) {
             rows = Collections.emptyList();
         } else {
-            rows = bookMapper.find(keywords, limit, offset);
+            rows = bookMapper.find(filterCategory ? category : null, keywords, limit, offset);
         }
         return new PageResult<>(total, pageNum, limit, rows);
     }

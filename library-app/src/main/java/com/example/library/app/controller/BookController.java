@@ -32,10 +32,11 @@ public class BookController {
     }
 
     @GetMapping
-    public ResponseEntity<ResponseResult<PageResult<FindBookDto>>> list(@RequestParam(value = "q", required = false) String query,
+    public ResponseEntity<ResponseResult<PageResult<FindBookDto>>> list(@RequestParam(value = "c", required = false, defaultValue = "all") String category,
+                                                                        @RequestParam(value = "q", required = false) String query,
                                                                         @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                                                         @RequestParam(value = "size", required = false, defaultValue = "20") int size) {
-        return ResponseEntity.ok(ResponseResults.ok(bookService.search(query, page, size)));
+        return ResponseEntity.ok(ResponseResults.ok(bookService.search(category, query, page, size)));
     }
 
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
