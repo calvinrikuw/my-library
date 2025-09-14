@@ -7,6 +7,7 @@ public class BookDetailDto {
     private Integer id;
     private String title;
     private String author;
+    private String publisher;
     private String isbn;
     private String categories;
     private String summary;

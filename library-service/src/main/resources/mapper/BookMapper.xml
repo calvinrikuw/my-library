@@ -73,8 +73,8 @@
     </select>
 
     <insert id="insertBook" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO books (title, author, isbn, categories, summary, cover_url, created_by)
-        VALUES (#{title}, #{author}, #{isbn}, #{categories}, #{summary}, #{coverUrl}, #{createdBy})
+        INSERT INTO books (title, author, publisher, isbn, categories, summary, cover_url, created_by)
+        VALUES (#{title}, #{author}, #{publisher}, #{isbn}, #{categories}, #{summary}, #{coverUrl}, #{createdBy})
     </insert>
 
     <insert id="insertInventory">
@@ -86,6 +86,7 @@
         SELECT b.id,
         b.title,
         b.author,
+        b.publisher,
         b.isbn,
         b.categories,
         b.summary,
