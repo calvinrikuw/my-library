@@ -92,7 +92,8 @@
         AND b.is_deleted  = 0
         ORDER BY
         CASE WHEN bl.return_date IS NULL THEN 0 ELSE 1 END ASC,
-        bl.loan_date DESC
+        bl.loan_date DESC,
+        bl.created_time DESC
         LIMIT 20
     </select>
 </mapper>
