@@ -6,7 +6,10 @@ import com.example.library.service.repository.LoanMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -64,4 +67,28 @@ public class LoanService {
         return loanMapper.findMyLoanBooks(userId);
     }
 
+    public void exportMyLoansCsv(Integer userId, Writer writer) throws IOException {
+        List<LoanBookDto> myLoanBooks = findMyLoanBooks(userId);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        writer.write("title,author,loan_date,return_date,status\n");
+        for (LoanBookDto book : myLoanBooks) {
+            String status = book.getReturnDate() == null ? "BORROWING" : "RETURNED";
+            String loanDate = book.getLoanDate() == null ? "" : dtf.format(book.getLoanDate());
+            String returnDate = book.getReturnDate() == null ? "" : dtf.format(book.getReturnDate());
+            writer.write(formatCsv(book.getTitle()) + ","
+                    + formatCsv(book.getAuthor()) + ","
+                    + formatCsv(loanDate) + ","
+                    + formatCsv(returnDate) + ","
+                    + formatCsv(status) + "\n");
+        }
+        writer.flush();
+    }
+
+    private String formatCsv(String s) {
+        if (s == null) return "";
+        // 确保含逗号、换行、引号时不会破坏 CSV 格式
+        String escaped = s.replace("\"", "\"\"");
+        return "\"" + escaped + "\"";
+    }
 }
