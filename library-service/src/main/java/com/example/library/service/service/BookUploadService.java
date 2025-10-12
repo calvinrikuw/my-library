@@ -9,6 +9,13 @@ import com.example.library.service.storage.LocalFileStorage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class BookUploadService {
 
@@ -38,7 +45,11 @@ public class BookUploadService {
 
         String coverUrl;
         try {
-            coverUrl = storage.saveCover(cover);
+            if (cover == null) {
+                coverUrl = "/static/default-cover.jpg";
+            } else {
+                coverUrl = storage.saveCover(cover);
+            }
         } catch (Exception ex) {
             throw new BusinessException("UPLOAD_FAIL", "书籍封面保存失败");
         }
@@ -60,6 +71,50 @@ public class BookUploadService {
 
         bookMapper.insertInventory(book.getId(), userId, userName);
         return new UploadBookResult(book.getId(), title, coverUrl);
+    }
+
+    @Transactional
+    public boolean importCsv(InputStream in, Integer userId, String userName) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
+            String header = br.readLine();
+            if (header == null) throw new BusinessException("INVALID_FILE", "缺少表头");
+            String[] heads = parseCsvLine(header);
+
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (!line.trim().isEmpty()) {
+                    String[] cols = parseCsvLine(line);
+                    String title = get(heads, cols, "title");
+                    String author = get(heads, cols, "author");
+                    String publisher = get(heads, cols, "publisher");
+                    String isbn = get(heads, cols, "isbn");
+                    String categories = get(heads, cols, "categories");
+                    String summary = get(heads, cols, "summary");
+                    upload(title, author, publisher, isbn, categories, summary, null, userId, userName);
+                }
+            }
+            return true;
+        } catch (Exception ex) {
+            throw new BusinessException("IMPORT_FAIL", "批量导入失败：" + ex.getMessage());
+        }
+    }
+
+    private String[] parseCsvLine(String s) {
+        if (s == null || s.isEmpty()) return new String[0];
+        // 去掉首尾的双引号，然后按","分割
+        if (s.startsWith("\"") && s.endsWith("\"")) {
+            s = s.substring(1, s.length() - 1);
+        }
+        return s.split("\",\"", -1);
+    }
+
+    private String get(String[] headers, String[] cols, String key) {
+        for (int i = 0; i < headers.length; i++) {
+            if (key.equalsIgnoreCase(headers[i].trim())) {
+                return i < cols.length ? cols[i] : null;
+            }
+        }
+        return null;
     }
 }
 

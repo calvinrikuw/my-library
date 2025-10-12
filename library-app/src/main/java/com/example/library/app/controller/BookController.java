@@ -8,6 +8,7 @@ import com.example.library.core.dto.BookDetailDto;
 import com.example.library.core.dto.FindBookDto;
 import com.example.library.core.dto.PageResult;
 import com.example.library.core.dto.UploadBookResult;
+import com.example.library.core.exception.BusinessException;
 import com.example.library.service.service.BookService;
 import com.example.library.service.service.BookUploadService;
 import com.example.library.service.storage.CoverData;
@@ -15,7 +16,10 @@ import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 @RestController
@@ -56,6 +60,18 @@ public class BookController {
 
         return ResponseEntity.ok(ResponseResults.ok("图书上架成功", res));
 
+    }
+
+    @PostMapping(value = "/import", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ResponseResult<Boolean>> importBooks(@RequestPart("file") MultipartFile file) {
+        Integer uid = SecurityUtils.getCurrentUid();
+        String name = SecurityUtils.getCurrentName();
+        try (InputStream in = file.getInputStream()) {
+            boolean ok = bookUploadService.importCsv(in, uid, name);
+            return ResponseEntity.ok(ResponseResults.ok(ok));
+        } catch (IOException ex) {
+            throw new BusinessException("IMPORT_FAIL", "读取上传文件失败");
+        }
     }
 
     @GetMapping("/{id}")
