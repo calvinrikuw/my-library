@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.library.service.repository.BookFavoriteMapper">
+
+    <select id="existsFavorite" resultType="int">
+        SELECT COUNT(1)
+        FROM book_favorite
+        WHERE user_id = #{userId}
+        AND book_id = #{bookId}
+        AND is_deleted = 0
+    </select>
+
+    <insert id="insertFavorite">
+        INSERT INTO book_favorite (user_id, book_id, created_by)
+        VALUES (#{userId}, #{bookId}, #{createdBy})
+    </insert>
+
+    <update id="deleteFavorite">
+        UPDATE book_favorite
+        SET is_deleted = 1,
+        updated_by = #{updatedBy}
+        WHERE user_id = #{userId}
+        AND book_id = #{bookId}
+        AND is_deleted = 0
+    </update>
+
+    <select id="listMyFavorites" resultType="com.example.library.core.dto.BookDetailDto">
+        SELECT b.id,
+        b.title,
+        b.author,
+        b.publisher,
+        b.isbn,
+        b.categories,
+        b.summary,
+        b.cover_url AS coverUrl
+        FROM book_favorite f
+        JOIN books b ON b.id = f.book_id
+        WHERE f.user_id = #{userId}
+          AND f.is_deleted = 0
+        ORDER BY f.created_time DESC
+    </select>
+
+</mapper>
